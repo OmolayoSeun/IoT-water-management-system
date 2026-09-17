@@ -5,6 +5,13 @@
 #define BLYNK_TEMPLATE_NAME "IOT Water Management System"
 #define BLYNK_AUTH_TOKEN "************************"
 
+#define TANK_FULL_DISTANCE_CM 14
+#define TANK_EMPTY_DISTANCE_CM 3
+
+#define REFILL_THRESHOLD 20
+#define CUTOFF_THRESHOLD 90
+#define TIMEOUT 30000
+
 // Include necessary libraries for Wi-Fi and Blynk functionality
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
@@ -69,7 +76,7 @@ float getWaterLevel() {
   digitalWrite(trigger, LOW);              // Set trigger back to low
 
   // Calculate and return the distance in cm
-  return (pulseIn(echo, HIGH) * 0.034 / 2.0);
+  return (pulseIn(echo, HIGH, TIMEOUT) * 0.034 / 2.0);
 }
 
 // Function to turn on the pump and print a message
@@ -106,13 +113,13 @@ void loop() {
   Blynk.run();  // Run Blynk functions
 
   // Get water level and map it to a percentage (0-100)
-  waterLevel = mapValue(getWaterLevel(), reservoirHeight, 3, 0, 100);
+  waterLevel = mapValue(getWaterLevel(), TANK_FULL_DISTANCE_CM, TANK_EMPTY_DISTANCE_CM, 0, 100);
 
   // Control pump based on water level
-  if (waterLevel <= 20) {
+  if (waterLevel <= REFILL_THRESHOLD) {
     onPump();            // Turn on pump if water level is low
     pumpState.on();     // Update pump state on Blynk app
-  } else if (waterLevel > 90) {
+  } else if (waterLevel > CUTOFF_THRESHOLD) {
     offPump();          // Turn off pump if water level is high
     pumpState.off();    // Update pump state on Blynk app
   }
