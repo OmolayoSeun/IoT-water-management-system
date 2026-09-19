@@ -150,16 +150,3 @@ Potential future improvements include:
 * Additional sensors for monitoring water quality or pump conditions.
 * Integration with machine-learning models after sufficient real-world data has been collected.
 
-## 12. Engineering Evaluation
-
-The system should be evaluated using experimental measurements rather than only functional demonstration.
-
-Potential evaluation metrics include:
-
-* Water-level measurement error
-* Sensor repeatability
-* Pump response time
-* Control accuracy
-* Network reconnection time
-* System uptime
-* False activation/deactivation events
